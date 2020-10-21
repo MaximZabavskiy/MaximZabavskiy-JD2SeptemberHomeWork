@@ -1,0 +1,428 @@
+create table m_users
+(
+    id         bigserial                                                  not null
+        constraint m_users_pk
+            primary key,
+    username   varchar(200)  default 'DEFAULT_NAME'::character varying    not null,
+    surname    varchar(1000) default 'DEFAULT_SURNAME'::character varying not null,
+    birth_date date,
+    login      varchar(100)                                               not null,
+    password   varchar(1000) default '123'::character varying             not null,
+    created    timestamp(6),
+    changed    timestamp(6),
+    is_blocked boolean       default false                                not null,
+    weight     double precision,
+    gender     varchar(50)   default 'NOT_SELECTED'::character varying    not null
+);
+
+alter table m_users
+    owner to testuser;
+
+create unique index m_users_login_uindex
+    on m_users (login);
+
+create table m_roles
+(
+    id        bigserial   not null
+        constraint m_roles_pk
+            primary key,
+    role_name varchar(50) not null,
+    user_id   bigint      not null
+        constraint m_roles_m_users_id_fk
+            references m_users
+            on update cascade on delete cascade
+);
+
+alter table m_roles
+    owner to testuser;
+
+create index m_roles_role_name_index
+    on m_roles (role_name);
+
+create index m_roles_user_id_index
+    on m_roles (user_id desc);
+
+create unique index m_roles_role_name_user_id_uindex
+    on m_roles (role_name, user_id);
+
+create table m_auto_dealer
+(
+    id                 bigserial         not null
+        constraint m_auto_dealer_pk
+            primary key,
+    name               varchar(100)      not null,
+    address            varchar(1000)     not null,
+    capacity           integer default 3 not null,
+    created            timestamp(6)      not null,
+    changed            timestamp(6)      not null,
+    year_of_foundation date              not null
+);
+
+alter table m_auto_dealer
+    owner to testuser;
+
+create table m_cars
+(
+    id                        bigserial        not null
+        constraint m_cars_pk
+            primary key,
+    model                     varchar(100)     not null,
+    guarantee_expiration_date timestamp(6)     not null,
+    price                     double precision not null,
+    dealer_id                 bigint           not null
+        constraint m_cars_m_auto_dealer_id_fk
+            references m_auto_dealer
+            on update cascade on delete cascade,
+    user_id                   bigint
+        constraint m_cars_m_users_id_fk
+            references m_users
+            on update cascade on delete set null
+);
+
+alter table m_cars
+    owner to testuser;
+
+create table m_body
+(
+    id      bigserial                                       not null
+        constraint m_body_pk
+            primary key,
+    color   varchar(100) default 'BLACK'::character varying not null,
+    vin     varchar(200)                                    not null,
+    type    varchar(100)                                    not null,
+    created timestamp(6)                                    not null,
+    changed timestamp(6)                                    not null,
+    car_id  bigint                                          not null
+        constraint m_body_m_cars_id_fk
+            references m_cars
+            on update cascade on delete cascade
+);
+
+alter table m_body
+    owner to testuser;
+
+create unique index m_body_vin_uindex
+    on m_body (vin);
+
+create table m_transmission
+(
+    id      bigserial        not null
+        constraint m_transmission_pk
+            primary key,
+    type    varchar(100)     not null,
+    gears   integer          not null,
+    weight  double precision not null,
+    created timestamp(6)     not null,
+    changed timestamp(6)     not null,
+    car_id  bigint           not null
+        constraint m_transmission_m_cars_id_fk
+            references m_cars
+            on update cascade on delete cascade
+);
+
+alter table m_transmission
+    owner to testuser;
+
+create index m_transmission_changed_index
+    on m_transmission (changed desc);
+
+create index m_transmission_created_index
+    on m_transmission (created desc);
+
+create index m_transmission_type_index
+    on m_transmission (type);
+
+create index m_transmission_weight_index
+    on m_transmission (weight desc);
+
+create table m_engine
+(
+    id            bigserial                                        not null
+        constraint m_engine_pk
+            primary key,
+    volume        double precision                                 not null,
+    cylinder      integer                                          not null,
+    batch         varchar(100)                                     not null,
+    fuel_type     varchar(100) default 'PETROL'::character varying not null,
+    car_id        bigint                                           not null
+        constraint m_engine_m_cars_id_fk
+            references m_cars
+            on update cascade on delete cascade,
+    is_deprecated boolean      default false                       not null
+);
+
+alter table m_engine
+    owner to testuser;
+
+create index m_engine_type_index
+    on m_engine (fuel_type);
+
+create index m_engine_volume_index
+    on m_engine (volume desc);
+
+create index m_cars_model_index
+    on m_cars (model);
+
+create index m_auto_dealer_address_index
+    on m_auto_dealer (address);
+
+create index m_auto_dealer_name_index
+    on m_auto_dealer (name);
+
+create table m_good
+(
+    id        bigserial    not null
+        constraint m_good_pk
+            primary key,
+    good_name varchar(100) not null
+);
+
+alter table m_good
+    owner to testuser;
+
+create table l_user_goods
+(
+    id      bigserial    not null
+        constraint l_user_goods_pk
+            primary key,
+    user_id integer      not null
+        constraint l_user_goods_m_users_id_fk
+            references m_users
+            on update cascade on delete cascade,
+    good_id integer      not null
+        constraint l_user_goods_m_good_id_fk
+            references m_good,
+    count   integer      not null,
+    created timestamp(6) not null,
+    changed timestamp(6) not null
+);
+
+alter table l_user_goods
+    owner to testuser;
+
+create index l_user_goods_count_index
+    on l_user_goods (count desc);
+
+create index l_user_goods_created_index
+    on l_user_goods (created desc);
+
+
+-- add transmission
+insert into m_transmission (id, type, gears, weight, created, changed, car_id)
+values (1, 'Automatic', 5, 92, '2013-12-05 16:18:57.766000', '2018-11-08 16:18:57.766000', 1);
+insert into m_transmission (id, type, gears, weight, created, changed, car_id)
+values (2, 'Electric', 6, 82, '2016-12-05 16:18:57.766000', '2019-12-08 16:18:57.766000', 1);
+insert into m_transmission (id, type, gears, weight, created, changed, car_id)
+values (3, 'Hydraulic', 5, 73, '2019-12-05 16:18:57.766000', '2020-11-08 16:18:57.766000', 1);
+insert into m_transmission (id, type, gears, weight, created, changed, car_id)
+values (4, 'Mechanic', 4, 56, '2018-12-05 16:18:57.766000', '2019-11-08 16:18:57.766000', 1);
+
+
+-- add roles
+insert into m_roles (id, role_name, user_id)
+values (1, 'Manager', 1);
+insert into m_roles (id, role_name, user_id)
+values (2, 'Director', 2);
+insert into m_roles (id, role_name, user_id)
+values (3, 'President', 3);
+
+
+-- add m_auto_dealer
+insert into m_auto_dealer (id, name, address, capacity, created, changed, year_of_foundation)
+values (1,'KIA','Minsk', 100, '2015-10-15 16:18:57.766000', '2018-10-18 16:18:57.766000', '2013-10-15 16:18:57.766000');
+insert into m_auto_dealer (id, name, address, capacity, created, changed, year_of_foundation)
+values (2,'ATLANT','Moscow', 150, '2014-10-15 16:18:57.766000', '2018-10-15 16:18:57.766000', '2012-10-15 16:18:57.766000');
+insert into m_auto_dealer (id, name, address, capacity, created, changed, year_of_foundation)
+values (3,'BMW','Kiev', 130, '2018-10-15 16:18:57.766000', '2019-10-15 16:18:57.766000', '2012-10-15 16:18:57.766000');
+
+-- update m_auto_dealer
+update m_auto_dealer
+set address = 'GERMANY'
+where id = 1;
+update m_auto_dealer
+set address = 'BELARUS'
+where id = 2;
+update m_auto_dealer
+set address = 'GERMANY'
+where id = 3;
+
+
+
+-- add cars
+insert into m_cars (id, model, guarantee_expiration_date, price, dealer_id, user_id)
+values (1,'BMW', '2020-10-05 16:18:57.766000', 500000, 1, 1);
+insert into m_cars (id, model, guarantee_expiration_date, price, dealer_id, user_id)
+values (2,'AUDI', '2021-10-20 16:18:57.766000', 35000, 3, 3);
+insert into m_cars (id, model, guarantee_expiration_date, price, dealer_id, user_id)
+values (3,'HONDA', '2022-10-28 16:18:57.766000', 30000, 2, 5);
+insert into m_cars (id, model, guarantee_expiration_date, price, dealer_id, user_id)
+values (4,'MAZDA', '2019-8-05 16:18:57.766000', 20000, 1, 2);
+insert into m_cars (id, model, guarantee_expiration_date, price, dealer_id, user_id)
+values (5,'RENO', '2020-10-08 16:18:57.766000', 100000, 1, 4);
+insert into m_cars (id, model, guarantee_expiration_date, price, dealer_id, user_id)
+values (6,'MERCEDES', '2019-10-10 16:18:57.766000', 70000, 2, 1);
+
+-- update cars
+update m_cars
+set color = 'WHITE', year_of_issue = 2012
+where id = 1;
+update m_cars
+set color = 'BLACK', year_of_issue = 2017
+where id = 2;
+update m_cars
+set color = 'RED', year_of_issue = 2015
+where id = 3;
+update m_cars
+set color = 'GREEN', year_of_issue = 2014
+where id = 4;
+update m_cars
+set color = 'RED', year_of_issue = 2014
+where id = 5;
+update m_cars
+set color = 'RED', year_of_issue = 2020
+where id = 6;
+
+-- update m_cars country and engine_capacity
+update m_cars
+set country = 'GERMANY', engine_capacity = 3
+where id = 1;
+update m_cars
+set country = 'FRANCE', engine_capacity = 5
+where id = 2;
+update m_cars
+set country = 'ITALY', engine_capacity = 2
+where id = 3;
+update m_cars
+set country = 'GERMANY', engine_capacity = 3
+where id = 4;
+update m_cars
+set country = 'ENGLAND', engine_capacity = 1
+where id = 5;
+update m_cars
+set country = 'GERMANY', engine_capacity = 2
+where id = 6;
+
+
+-- add Users
+insert into m_users (id, username, surname, birth_date, login, password, created, changed, is_blocked, weight, gender)
+values (1,'Max', 'Green', '1990-10-15 16:18:57.766000', 'MG22', 123, '2020-10-03 16:18:57.766000', '2020-10-17 16:18:57.766000', true, 60, 'MALE');
+insert into m_users (id, username, surname, birth_date, login, password, created, changed, is_blocked, weight, gender)
+values (2,'Bob', 'Grey',' 1989-10-15 16:18:57.766000','BG11',321, '2020-10-04 16:18:57.766000', '2020-10-17 16:18:57.766000', true, 75, 'MALE');
+insert into m_users (id, username, surname, birth_date, login, password, created, changed, is_blocked, weight, gender)
+values (3,'Tim', 'Red', '1992-10-23 16:18:57.766000','TR33',4444, '2020-10-11 16:18:57.766000', '2020-10-17 16:18:57.766000', false, 89, 'MALE');
+insert into m_users (id, username, surname, birth_date, login, password, created, changed, is_blocked, weight, gender)
+values (4,'Bill', 'Brown', '1993-10-15 16:18:57.766000','BB44',5555, '2020-10-20 16:18:57.766000', '2020-10-06 16:18:57.766000', true, 78, 'MALE');
+insert into m_users (id, username, surname, birth_date, login, password, created, changed, is_blocked, weight, gender)
+values (5,'John', 'Black','1988-10-15 16:18:57.766000','JB55',7777, '2020-10-15 16:18:57.766000', '2020-10-20 16:18:57.766000', false, 69, 'MALE' );
+
+-- update m_users - add country
+update m_users
+set address = 'GERMANY'
+where id = 1;
+update m_users
+set address = 'GERMANY'
+where id = 2;
+update m_users
+set address = 'GERMANY'
+where id = 3;
+update m_users
+set address = 'RUSSIA'
+where id = 4;
+update m_users
+set address = 'BELARUS'
+where id = 5;
+
+
+
+-- add bodies
+insert into m_body (id, color, vin, type, created, changed, car_id)
+values (1,'GOLD', 'ADA22', 'SEDAN', '2020-09-03 16:18:57.766000', '2020-10-16 16:18:57.766000', 1);
+insert into m_body (id, color, vin, type, created, changed, car_id)
+values (2,'WHITE', 'ADF32', 'PICKUP', '2016-07-03 16:18:57.766000', '2017-12-25 16:18:57.766000', 5);
+insert into m_body (id, color, vin, type, created, changed, car_id)
+values (3,'BLACK', 'ASDF23', 'SVU', '2017-03-02 16:18:57.766000', '2018-03-11 16:18:57.766000', 3);
+insert into m_body (id, color, vin, type, created, changed, car_id)
+values (4,'BLUE', 'FDASG532', 'UNIVERSAL', '2020-10-06 16:49:49.162574', '2020-08-14 16:18:57.766000', 4);
+insert into m_body (id, color, vin, type, created, changed, car_id)
+values (5,'RED', 'DSAHG35', 'SPORT', '2017-11-23 16:18:57.766000', '2020-09-11 15:18:57.766000', 2);
+
+-- 1) Вывести все уникальные имена ролей пользователей.
+select distinct (role_name)
+from m_roles;
+
+-- 2) Подсчитать число машин у каждого пользователя. Вывести в формате User full name (username + пробел + user surname) | Число машин у пользователя.
+select u.id, u.username,' ', u.surname, '|', count(mc.model)
+from m_users u
+join m_cars mc on u.id = mc.user_id
+group by u.id
+order by u.id;
+
+-- 3) Подсчитать для каждого диллера число машин, старше 2018 года производства с красным кузовом.
+select ad.name, count(mc.model)
+from m_auto_dealer ad
+join m_cars mc on ad.id = mc.dealer_id
+where mc.color = 'RED' and mc.year_of_issue < 2018
+group by ad.name;
+
+--4) Найти пользователей не из Беларуси и России, у которых есть машина 2010-2015 года выпуска из Германии и купленную в
+-- диллере не в Германии с объемом двигателя больше 3 литра.
+
+select mu.username, mu.surname
+from m_users mu
+join m_cars mc on mu.id = mc.user_id
+join m_auto_dealer mad on mc.dealer_id = mad.id
+where NOT lower (mu.address) = 'russia'
+and NOT lower (mu.address) = 'belarus'
+and mc.year_of_issue > 2010
+and mc.year_of_issue < 2015
+and lower (mc.country) = 'germany'
+and NOT lower (mad.address) = 'germany'
+and mc.engine_capacity > 3
+group by mu.username, mu.surname;
+
+-- 5) Определить логины пользователей, имеющих больше 3 машин.
+
+select mu.login
+from m_users mu
+join m_cars mc on mu.id = mc.user_id
+group by mu.login
+having count(mc.user_id) > 3;
+
+-- 6) Вывести уникальных диллеров с подсчитанной суммой стоимостей машин, связанных с ними.
+
+select distinct (mad.name), sum(mc.price)
+from m_auto_dealer mad
+join m_cars mc on mad.id = mc.dealer_id
+group by mad.name;
+
+-- 7) Подсчитать количество уникальных пользователей, владеющих хотя бы одной машиной, стоимость которой превышает
+-- среднюю стоимость всех машин.
+
+select count (distinct user_id)
+from m_cars m
+where price > (select avg (price) from m_cars)
+having sum(distinct user_id) > 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

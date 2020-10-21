@@ -1,14 +1,11 @@
 package com.noirix.repository.impl;
 
-import com.noirix.domain.Gender;
-import com.noirix.domain.User;
+import com.noirix.domain.Car;
 import com.noirix.exception.EntityNotFoundException;
-import com.noirix.repository.UserRepository;
+import com.noirix.repository.CarRepository;
 import com.noirix.util.DatabasePropertiesReader;
-import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,29 +20,27 @@ import static com.noirix.util.DatabasePropertiesReader.DATABASE_LOGIN;
 import static com.noirix.util.DatabasePropertiesReader.DATABASE_PASSWORD;
 import static com.noirix.util.DatabasePropertiesReader.DATABASE_URL;
 
-@Repository
-public class UserRepositoryImpl implements UserRepository {
+public class CarRepositoryImpl implements CarRepository {
 
     public static final DatabasePropertiesReader reader = DatabasePropertiesReader.getInstance();
 
+
     private static final String ID = "id";
-    private static final String NAME = "name";
-    private static final String SURNAME = "surname";
-    private static final String BIRTH_DATE = "birth_date";
-    private static final String GENDER = "gender";
-    private static final String CREATED = "created";
-    private static final String CHANGED = "changed";
-    private static final String WEIGHT = "weight";
+    private static final String MODEL = "model";
+    private static final String CREATION_YEAR = "creation_year";
+    private static final String USER_ID = "user_id";
+    private static final String PRICE = "price";
+    private static final String COLOR = "color";
 
     @Override
-    public List<User> search(String query) {
+    public List<Car> search(String query) {
         return null;
     }
 
     @Override
-    public User save(User user) {
-        final String findByIdQuery = "insert into m_users (name, surname, birth_date, gender, created, changed, weight) " +
-                "values (?,?,?,?,?,?,?)";
+    public Car save(Car car) {
+        final String findByIdQuery = "insert into m_cars (model, creation_year, user_id, price, color) " +
+                "values (?,?,?,?,?)";
 
         Connection connection;
         PreparedStatement statement;
@@ -60,15 +55,13 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             connection = DriverManager.getConnection(reader.getProperty(DATABASE_URL), reader.getProperty(DATABASE_LOGIN), reader.getProperty(DATABASE_PASSWORD));
             statement = connection.prepareStatement(findByIdQuery);
-            PreparedStatement lastInsertId = connection.prepareStatement("SELECT currval('m_users_id_seq') as last_insert_id;");
+            PreparedStatement lastInsertId = connection.prepareStatement("SELECT currval('m_cars_id_seq') as last_insert_id;");
 
-            statement.setString(1, user.getName());
-            statement.setString(2, user.getSurname());
-            statement.setDate(3, new Date(user.getBirthDate().getTime()));
-            statement.setString(4, user.getGender().name());
-            statement.setTimestamp(5, user.getCreated());
-            statement.setTimestamp(6, user.getChanged());
-            statement.setFloat(7, user.getWeight());
+            statement.setString(1, car.getModel());
+            statement.setInt(2, car.getCreation_year());
+            statement.setLong(3, car.getUser_id());
+            statement.setDouble(4, car.getPrice());
+            statement.setString(5, car.getColor());
 
             statement.executeUpdate();
 
@@ -77,7 +70,7 @@ public class UserRepositoryImpl implements UserRepository {
             if (lastIdResultSet.next()) {
                 insertedId = lastIdResultSet.getLong("last_insert_id");
             } else {
-                throw new RuntimeException("We cannot read sequence last value during User creation!");
+                throw new RuntimeException("We cannot read sequence last value during Car creation!");
             }
 
             return findById(insertedId);
@@ -88,10 +81,10 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> findAll() {
-        final String findAllQuery = "select * from m_users order by id";
+    public List<Car> findAll() {
+        final String findAllQuery = "select * from m_cars order by id";
 
-        List<User> result = new ArrayList<>();
+        List<Car> result = new ArrayList<>();
 
         Connection connection;
         Statement statement;
@@ -120,22 +113,20 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-    private User parseResultSet(ResultSet rs) throws SQLException {
-        User user = new User();
-        user.setId(rs.getLong(ID));
-        user.setName(rs.getString(NAME));
-        user.setSurname(rs.getString(SURNAME));
-        user.setBirthDate(rs.getDate(BIRTH_DATE));
-        user.setGender(Gender.valueOf(rs.getString(GENDER)));
-        user.setCreated(rs.getTimestamp(CREATED));
-        user.setChanged(rs.getTimestamp(CHANGED));
-        user.setWeight(rs.getFloat(WEIGHT));
-        return user;
+    private Car parseResultSet(ResultSet rs) throws SQLException {
+        Car car = new Car();
+        car.setId(rs.getLong(ID));
+        car.setModel(rs.getString(MODEL));
+        car.setCreation_year(rs.getInt(CREATION_YEAR));
+        car.setUser_id(rs.getLong(USER_ID));
+        car.setPrice(rs.getDouble(PRICE));
+        car.setColor(rs.getString(COLOR));
+        return car;
     }
 
     @Override
-    public User findById(Long key) {
-        final String findByIdQuery = "select * from m_users where id = ?";
+    public Car findById(Long key) {
+        final String findByIdQuery = "select * from m_cars where id = ?";
 
         Connection connection;
         PreparedStatement statement;
@@ -158,7 +149,7 @@ public class UserRepositoryImpl implements UserRepository {
             if (rs.next()) {
                 return parseResultSet(rs);
             } else {
-                throw new EntityNotFoundException("User with ID:" + key + "not found");
+                throw new EntityNotFoundException("Car with ID:" + key + "not found");
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -167,21 +158,19 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findOne(Long key) {
+    public Optional<Car> findOne(Long key) {
         return Optional.of(findById(key));
     }
 
     @Override
-    public User update(User user) {
-        final String findByIdQuery = "update m_users " +
+    public Car update(Car car) {
+        final String findByIdQuery = "update m_cars " +
                 "set " +
-                "name = ?,  " +
-                "surname = ?,  " +
-                "birth_date = ?,  " +
-                "gender = ?,  " +
-                "created = ?,  " +
-                "changed = ?,  " +
-                "weight = ?  " +
+                "model = ?,  " +
+                "creation_year = ?,  " +
+                "user_id = ?,  " +
+                "price = ?,  " +
+                "color = ?,  " +
                 "where id = ?";
 
         Connection connection;
@@ -197,17 +186,15 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             connection = DriverManager.getConnection(reader.getProperty(DATABASE_URL), reader.getProperty(DATABASE_LOGIN), reader.getProperty(DATABASE_PASSWORD));
             statement = connection.prepareStatement(findByIdQuery);
-            statement.setString(1, user.getName());
-            statement.setString(2, user.getSurname());
-            statement.setDate(3, new Date(user.getBirthDate().getTime()));
-            statement.setString(4, user.getGender().name());
-            statement.setTimestamp(5, user.getCreated());
-            statement.setTimestamp(6, user.getChanged());
-            statement.setFloat(7, user.getWeight());
-            statement.setLong(8, user.getId());
+            statement.setString(1, car.getModel());
+            statement.setInt(2, car.getCreation_year());
+            statement.setLong(3, car.getUser_id());
+            statement.setDouble(4, car.getPrice());
+            statement.setString(5, car.getColor());
+            statement.setLong(6, car.getId());
 
             statement.executeUpdate();
-            return findById(user.getId());
+            return findById(car.getId());
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             throw new RuntimeException("SQL Issues!");
@@ -215,8 +202,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Long delete(User user) {
-        final String findByIdQuery = "delete from m_users where id = ?";
+    public Long delete(Car car) {
+        final String findByIdQuery = "delete from m_cars where id = ?";
 
         Connection connection;
         PreparedStatement statement;
@@ -231,7 +218,7 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             connection = DriverManager.getConnection(reader.getProperty(DATABASE_URL), reader.getProperty(DATABASE_LOGIN), reader.getProperty(DATABASE_PASSWORD));
             statement = connection.prepareStatement(findByIdQuery);
-            statement.setLong(1, user.getId());
+            statement.setLong(1, car.getId());
 
             int deletedRows = statement.executeUpdate();
             return (long) deletedRows;
@@ -241,3 +228,4 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 }
+

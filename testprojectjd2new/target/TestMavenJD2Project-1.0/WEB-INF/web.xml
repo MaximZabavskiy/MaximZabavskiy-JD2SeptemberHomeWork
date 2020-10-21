@@ -68,12 +68,10 @@
     </filter>
 
 <!--    Ordering in filter mapping defines which filter should be invoked firstly-->
-
     <filter-mapping>
         <filter-name>CharsetFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
     <filter-mapping>
         <filter-name>AuthHeaderFilter</filter-name>
         <url-pattern>/*</url-pattern>

@@ -2,41 +2,40 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <title>System Users</title>
+    <title>System Cars</title>
 </head>
 <body>
 <div>
-    <h1>System Users</h1>
+    <h1>System Cars</h1>
 </div>
 <div>
     <table>
         <tr>
-            <td>User Id</td>
-            <td>User Name</td>
-            <td>User Surname</td>
-            <td>Birth date</td>
-            <td>Gender</td>
-            <td>Created</td>
-            <td>Changed</td>
-            <td>Weight</td>
+            <td>Car Id</td>
+            <td>Model</td>
+            <td>Creation year</td>
+            <td>User id</td>
+            <td>Price</td>
+            <td>Color</td>
             <td>Edit</td>
             <td>Delete</td>
         </tr>
-        <c:forEach var="user" items="${users}">
+        <c:forEach var="car" items="${cars}">
             <tr>
-                <td>${user.id}</td>
-                <td>${user.name}</td>
-                <td>${user.surname}</td>
-                <td>${user.birthDate}</td>
-                <td>${user.gender}</td>
-                <td>${user.created}</td>
-                <td>${user.changed}</td>
-                <td>${user.weight}</td>
+                <td>${car.id}</td>
+                <td>${car.model}</td>
+                <td>${car.creation_year}</td>
+                <td>${car.user_id}</td>
+                <td>${car.price}</td>
+                <td>${car.color}</td>
                 <td><button>Edit</button></td>
                 <td><button>Delete</button></td>
             </tr>
         </c:forEach>
     </table>
+</div>
+<div>
+    ${singleCar}
 </div>
 </body>
 </html>

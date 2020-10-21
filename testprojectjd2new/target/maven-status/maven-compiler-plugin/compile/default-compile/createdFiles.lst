@@ -5,8 +5,6 @@ com\noirix\repository\impl\UserRepositoryImpl.class
 com\noirix\util\DatabasePropertiesReader.class
 com\noirix\exception\EntityNotFoundException.class
 com\noirix\repository\CrudRepository.class
-com\noirix\controller\FrontController$1.class
-com\noirix\controller\FrontController.class
 com\noirix\controller\command\Commands.class
 com\noirix\listener\CustomContextListener.class
 com\noirix\domain\Gender.class
