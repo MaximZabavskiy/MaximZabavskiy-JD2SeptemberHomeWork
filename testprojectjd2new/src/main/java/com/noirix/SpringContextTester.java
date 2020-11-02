@@ -1,51 +1,50 @@
 package com.noirix;
 
-import com.noirix.domain.Car;
+import com.noirix.domain.Gender;
 import com.noirix.domain.User;
-import com.noirix.repository.UserRepository;
-import com.noirix.util.DatabaseConfig;
+import com.noirix.service.UserService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.log4j.Logger;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
+//@Slf4j
 public class SpringContextTester {
+    private static final Logger log = Logger.getLogger(SpringContextTester.class);
+
     public static void main(String[] args) {
-        ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext("classpath:application-context.xml");
-
-        User user1 = (User) classPathXmlApplicationContext.getBean("user1");
-        User user2 = (User) classPathXmlApplicationContext.getBean("user2");
-
-        System.out.println(user1.getId());
-        System.out.println(user1.getName());
-        System.out.println(user1.getSurname());
-
-        System.out.println(user2.getId());
-        System.out.println(user2.getName());
-        System.out.println(user2.getSurname());
-
-
-        System.out.println("******************************************");
-
         AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext("com.noirix");
 
-        DatabaseConfig bean = annotationConfigApplicationContext.getBean(DatabaseConfig.class);
-        System.out.println(bean.getLogin());
-        System.out.println(bean.getDriverName());
-        System.out.println(bean.getPassword());
-        System.out.println(bean.getUrl());
-        /* This is how to check available beans in context */
+        UserService userService = annotationConfigApplicationContext.getBean(UserService.class);
 
-//        for (String beanDefinitionName : annotationConfigApplicationContext.getBeanDefinitionNames()) {
-//            System.out.println(beanDefinitionName);
-//        }
+        log.info(userService.findAll().stream().map(User::getName).collect(Collectors.joining(", ")));
 
-        Car generatedCar = annotationConfigApplicationContext.getBean(Car.class);
-        System.out.println(generatedCar);
+        log.info(userService.findById(4L).toString());
 
+        List<User> testCreate = userService.search("TestCreate");
 
-        UserRepository userRepository = annotationConfigApplicationContext.getBean(UserRepository.class);
+        for (User user : testCreate) {
+            log.info(user.toString());
+        }
 
-        System.out.println(userRepository.findAll().stream().map(User::getName).collect(Collectors.joining(", ")));
+        User userForSave =
+                User.builder()
+                        .name("Viachaslau")
+                        .surname("Kalevich")
+                        .birthDate(new Date())
+                        .created(new Timestamp(new Date().getTime()))
+                        .changed(new Timestamp(new Date().getTime()))
+                        .gender(Gender.MALE)
+                        .weight(90f)
+                        .build();
+
+        log.info(userService.save(userForSave).toString());
+
+        //Add search method to service
+        //Realise search method with JDBCTemplate or NamedParamJDBCTemplate
     }
 }
