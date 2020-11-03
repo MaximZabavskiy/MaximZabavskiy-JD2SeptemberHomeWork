@@ -1,13 +1,29 @@
-C:\Users\Дом\IdeaProjects\testprojectjd2new\src\main\java\com\noirix\repository\CrudRepository.java
-C:\Users\Дом\IdeaProjects\testprojectjd2new\src\main\java\com\noirix\controller\FrontController.java
-C:\Users\Дом\IdeaProjects\testprojectjd2new\src\main\java\com\noirix\util\DatabasePropertiesReader.java
-C:\Users\Дом\IdeaProjects\testprojectjd2new\src\main\java\com\noirix\domain\Gender.java
-C:\Users\Дом\IdeaProjects\testprojectjd2new\src\main\java\com\noirix\repository\impl\UserRepositoryImpl.java
-C:\Users\Дом\IdeaProjects\testprojectjd2new\src\main\java\com\noirix\filter\CharsetFilter.java
-C:\Users\Дом\IdeaProjects\testprojectjd2new\src\main\java\com\noirix\exception\EntityNotFoundException.java
-C:\Users\Дом\IdeaProjects\testprojectjd2new\src\main\java\com\noirix\repository\UserRepository.java
-C:\Users\Дом\IdeaProjects\testprojectjd2new\src\main\java\com\noirix\filter\AuthHeaderFilter.java
-C:\Users\Дом\IdeaProjects\testprojectjd2new\src\main\java\com\noirix\domain\User.java
-C:\Users\Дом\IdeaProjects\testprojectjd2new\src\main\java\com\noirix\Main.java
-C:\Users\Дом\IdeaProjects\testprojectjd2new\src\main\java\com\noirix\controller\command\Commands.java
-C:\Users\Дом\IdeaProjects\testprojectjd2new\src\main\java\com\noirix\listener\CustomContextListener.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\repository\UserRepository.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\repository\impl\UserRepositoryJdbcTemplateImpl.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\domain\Gender.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\exception\EntityNotFoundException.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\config\ApplicationBeans.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\service\UserService.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\controller\command\Commands.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\domain\User.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\config\ApplicationMainConfiguration.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\repository\CarRepository.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\service\impl\CarServiceImpl.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\filter\CharsetFilter.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\repository\UserColumns.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\service\impl\UserServiceImpl.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\service\CarService.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\domain\Car.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\filter\AuthHeaderFilter.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\repository\impl\CarRepositoryJdbcTemplateImpl.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\Main.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\SpringContextTester.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\controller\FrontController.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\listener\CustomContextListener.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\aspect\LoggingAspect.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\repository\CarColumns.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\repository\impl\CarRepositoryImpl.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\repository\impl\UserRepositoryImpl.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\config\DatabaseConfig.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\repository\CrudRepository.java
+E:\Java_Projects\02.11.2020 copy of ClassWork\src\main\java\com\noirix\util\DatabasePropertiesReader.java
