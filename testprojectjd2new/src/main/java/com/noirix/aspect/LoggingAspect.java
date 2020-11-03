@@ -8,7 +8,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @Aspect
@@ -36,7 +37,7 @@ public class LoggingAspect {
     private String nameUpdateMethod = methodMap.get(6);
     private String nameDeleteMethod = methodMap.get(7);
 
-    @Pointcut("execution(* com.noirix.repository.impl.UserRepositoryJdbcTemplateImpl.*(..))")
+    @Pointcut("execution(* com.noirix.repository.impl.CarRepositoryJdbcTemplateImpl.*(..))")
     public void aroundRepositoryPointcut() {
     }
 

@@ -1,14 +1,10 @@
 package com.noirix;
 
-import com.noirix.domain.Gender;
-import com.noirix.domain.User;
-import com.noirix.service.UserService;
-import lombok.extern.slf4j.Slf4j;
+import com.noirix.domain.Car;
+import com.noirix.service.CarService;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,30 +15,28 @@ public class SpringContextTester {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext("com.noirix");
 
-        UserService userService = annotationConfigApplicationContext.getBean(UserService.class);
+        CarService carService = annotationConfigApplicationContext.getBean(CarService.class);
 
-        log.info(userService.findAll().stream().map(User::getName).collect(Collectors.joining(", ")));
+        log.info(carService.findAll().stream().map(Car::getModel).collect(Collectors.joining(", ")));
 
-        log.info(userService.findById(4L).toString());
+        log.info(carService.findById(4L).toString());
 
-        List<User> testCreate = userService.search("TestCreate");
+        List<Car> testCreate = carService.search("TestCreate");
 
-        for (User user : testCreate) {
-            log.info(user.toString());
+        for (Car car : testCreate) {
+            log.info(car.toString());
         }
 
-        User userForSave =
-                User.builder()
-                        .name("Viachaslau")
-                        .surname("Kalevich")
-                        .birthDate(new Date())
-                        .created(new Timestamp(new Date().getTime()))
-                        .changed(new Timestamp(new Date().getTime()))
-                        .gender(Gender.MALE)
-                        .weight(90f)
+        Car carForSave =
+                Car.builder()
+                        .model("SUZUKI")
+                        .creationYear(2019)
+                        .userId(2L)
+                        .price(60000.00)
+                        .color("YELLOW")
                         .build();
 
-        log.info(userService.save(userForSave).toString());
+        log.info(carService.save(carForSave).toString());
 
         //Add search method to service
         //Realise search method with JDBCTemplate or NamedParamJDBCTemplate

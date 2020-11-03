@@ -4,7 +4,6 @@ package com.noirix.service.impl;
 import com.noirix.domain.User;
 import com.noirix.repository.UserRepository;
 import com.noirix.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

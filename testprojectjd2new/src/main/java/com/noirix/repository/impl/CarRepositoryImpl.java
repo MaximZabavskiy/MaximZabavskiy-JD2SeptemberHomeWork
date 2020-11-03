@@ -1,9 +1,13 @@
 package com.noirix.repository.impl;
 
 import com.noirix.domain.Car;
+
 import com.noirix.exception.EntityNotFoundException;
+import com.noirix.repository.CarColumns;
 import com.noirix.repository.CarRepository;
 import com.noirix.util.DatabasePropertiesReader;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,22 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.noirix.util.DatabasePropertiesReader.DATABASE_DRIVER_NAME;
-import static com.noirix.util.DatabasePropertiesReader.DATABASE_LOGIN;
+import static com.noirix.util.DatabasePropertiesReader.*;
 import static com.noirix.util.DatabasePropertiesReader.DATABASE_PASSWORD;
-import static com.noirix.util.DatabasePropertiesReader.DATABASE_URL;
 
+@Repository
 public class CarRepositoryImpl implements CarRepository {
 
+    private static final org.apache.log4j.Logger log = Logger.getLogger(CarRepositoryImpl.class);
+
     public static final DatabasePropertiesReader reader = DatabasePropertiesReader.getInstance();
-
-
-    private static final String ID = "id";
-    private static final String MODEL = "model";
-    private static final String CREATION_YEAR = "creation_year";
-    private static final String USER_ID = "user_id";
-    private static final String PRICE = "price";
-    private static final String COLOR = "color";
 
     @Override
     public List<Car> search(String query) {
@@ -48,7 +45,7 @@ public class CarRepositoryImpl implements CarRepository {
         try {
             Class.forName(reader.getProperty(DATABASE_DRIVER_NAME));
         } catch (ClassNotFoundException e) {
-            System.err.println("JDBC Driver Cannot be loaded!");
+            log.error("JDBC Driver Cannot be loaded!");
             throw new RuntimeException("JDBC Driver Cannot be loaded!");
         }
 
@@ -58,8 +55,8 @@ public class CarRepositoryImpl implements CarRepository {
             PreparedStatement lastInsertId = connection.prepareStatement("SELECT currval('m_cars_id_seq') as last_insert_id;");
 
             statement.setString(1, car.getModel());
-            statement.setInt(2, car.getCreation_year());
-            statement.setLong(3, car.getUser_id());
+            statement.setInt(2, car.getCreationYear());
+            statement.setLong(3, car.getUserId());
             statement.setDouble(4, car.getPrice());
             statement.setString(5, car.getColor());
 
@@ -115,12 +112,12 @@ public class CarRepositoryImpl implements CarRepository {
 
     private Car parseResultSet(ResultSet rs) throws SQLException {
         Car car = new Car();
-        car.setId(rs.getLong(ID));
-        car.setModel(rs.getString(MODEL));
-        car.setCreation_year(rs.getInt(CREATION_YEAR));
-        car.setUser_id(rs.getLong(USER_ID));
-        car.setPrice(rs.getDouble(PRICE));
-        car.setColor(rs.getString(COLOR));
+        car.setId(rs.getLong(CarColumns.ID));
+        car.setModel(rs.getString(CarColumns.MODEL));
+        car.setCreationYear(rs.getInt(CarColumns.CREATION_YEAR));
+        car.setUserId(rs.getLong(CarColumns.USER_ID));
+        car.setPrice(rs.getDouble(CarColumns.PRICE));
+        car.setColor(rs.getString(CarColumns.COLOR));
         return car;
     }
 
@@ -186,12 +183,12 @@ public class CarRepositoryImpl implements CarRepository {
         try {
             connection = DriverManager.getConnection(reader.getProperty(DATABASE_URL), reader.getProperty(DATABASE_LOGIN), reader.getProperty(DATABASE_PASSWORD));
             statement = connection.prepareStatement(findByIdQuery);
+
             statement.setString(1, car.getModel());
-            statement.setInt(2, car.getCreation_year());
-            statement.setLong(3, car.getUser_id());
+            statement.setInt(2, car.getCreationYear());
+            statement.setLong(3, car.getUserId());
             statement.setDouble(4, car.getPrice());
             statement.setString(5, car.getColor());
-            statement.setLong(6, car.getId());
 
             statement.executeUpdate();
             return findById(car.getId());
@@ -228,4 +225,3 @@ public class CarRepositoryImpl implements CarRepository {
         }
     }
 }
-
