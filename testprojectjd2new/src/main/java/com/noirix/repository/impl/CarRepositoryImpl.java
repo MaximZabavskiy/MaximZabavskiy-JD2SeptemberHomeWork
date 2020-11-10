@@ -55,7 +55,7 @@ public class CarRepositoryImpl implements CarRepository {
             PreparedStatement lastInsertId = connection.prepareStatement("SELECT currval('m_cars_id_seq') as last_insert_id;");
 
             statement.setString(1, car.getModel());
-            statement.setInt(2, car.getCreationYear());
+            statement.setLong(2, car.getCreationYear());
             statement.setLong(3, car.getUserId());
             statement.setDouble(4, car.getPrice());
             statement.setString(5, car.getColor());
@@ -114,7 +114,7 @@ public class CarRepositoryImpl implements CarRepository {
         Car car = new Car();
         car.setId(rs.getLong(CarColumns.ID));
         car.setModel(rs.getString(CarColumns.MODEL));
-        car.setCreationYear(rs.getInt(CarColumns.CREATION_YEAR));
+        car.setCreationYear(rs.getLong(CarColumns.CREATION_YEAR));
         car.setUserId(rs.getLong(CarColumns.USER_ID));
         car.setPrice(rs.getDouble(CarColumns.PRICE));
         car.setColor(rs.getString(CarColumns.COLOR));
@@ -185,7 +185,7 @@ public class CarRepositoryImpl implements CarRepository {
             statement = connection.prepareStatement(findByIdQuery);
 
             statement.setString(1, car.getModel());
-            statement.setInt(2, car.getCreationYear());
+            statement.setLong(2, car.getCreationYear());
             statement.setLong(3, car.getUserId());
             statement.setDouble(4, car.getPrice());
             statement.setString(5, car.getColor());

@@ -70,7 +70,7 @@ public class CarRepositoryJdbcTemplateImpl implements CarRepository {
         Car car = new Car();
         car.setId(rs.getLong(CarColumns.ID));
         car.setModel(rs.getString(CarColumns.MODEL));
-        car.setCreationYear(rs.getInt(CarColumns.CREATION_YEAR));
+        car.setCreationYear(rs.getLong(CarColumns.CREATION_YEAR));
         car.setUserId(rs.getLong(CarColumns.USER_ID));
         car.setPrice(rs.getDouble(CarColumns.PRICE));
         car.setColor(rs.getString(CarColumns.COLOR));

@@ -5,6 +5,7 @@ import com.noirix.service.CarService;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class SpringContextTester {
         Car carForSave =
                 Car.builder()
                         .model("SUZUKI")
-                        .creationYear(2019)
+                        .creationYear(2019L)
                         .userId(2L)
                         .price(60000.00)
                         .color("YELLOW")

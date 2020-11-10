@@ -21,7 +21,7 @@ public class Car {
 
     private String model;
 
-    private Integer creationYear;
+    private Long creationYear;
 
     private Long userId;
 
