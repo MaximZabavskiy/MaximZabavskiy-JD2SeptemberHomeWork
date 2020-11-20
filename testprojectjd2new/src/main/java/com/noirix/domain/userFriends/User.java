@@ -22,15 +22,6 @@ public class User {
         this.friends = friends;
     }
 
-    public User(String name, String surname) {
-        this.name = name;
-        this.surname = surname;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
     public String getName() {
         return name;
     }
@@ -47,22 +38,8 @@ public class User {
                 ", surname='" + surname + '\'' +
                 '}';
     }
-
-    // The beginning from the max level
-    public List<User> getUserFriends(User user, int innerLevel) {
-        if (innerLevel == 1) {
-            for (int i = 0; i < friends.size(); i++) {
-                for (User friend : friends) {
-                    return friend.getFriends();
-                }
-            }
-        }
-
-        List<User> userFriends = user.getFriends().stream().map(User::getUserFriends(User user, innerLevel - 1));
-
-        return userFriends;
-    }
 }
+
 
 
 
